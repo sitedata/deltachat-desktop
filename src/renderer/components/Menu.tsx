@@ -81,6 +81,8 @@ export default function DeltaMenu(props: { selectedChat: FullChat }) {
       },
     })
   }
+  const openChatAuditLog = () =>
+    screenContext.openDialog('ChatAuditLogDialog', { selectedChat })
   const logout = () => {
     if (selectedChat) {
       chatStoreDispatch({ type: 'UI_UNSELECT_CHAT' })
@@ -170,6 +172,13 @@ export default function DeltaMenu(props: { selectedChat: FullChat }) {
           key='disappearing'
           text={tx('ephemeral_messages')}
           onClick={onDisappearingMessages}
+        />
+      ),
+      !(isSelfTalk || isDeviceChat) && (
+        <DeltaMenuItem
+          key='chat-audit-log'
+          text={tx('menu_item_chat_audit_log')}
+          onClick={openChatAuditLog}
         />
       ),
       <Menu.Divider key='divider-2' />,
