@@ -2,6 +2,12 @@
 
 ## [Unreleased][unreleased]
 
+### Added
+- encryption info for groups
+
+## Fixed
+- hide show encrytion info for saved messages (resulted in error)
+
 ## [1.15.1] - 2021-02-13
 
 ### Fixed
