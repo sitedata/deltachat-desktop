@@ -2,6 +2,9 @@
 
 ## [Unreleased][unreleased]
 
+## Changed
+- use new `decideOnContactRequest` api
+
 ## [1.15.1] - 2021-02-13
 
 ### Fixed
