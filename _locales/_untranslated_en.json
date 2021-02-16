@@ -64,5 +64,8 @@
   },
   "forwared_by": {
     "message": "Forwarded by %1$s"
+  },
+  "show_full_message_in_browser": {
+    "message": "Show full message in browser…"
   }
 }
