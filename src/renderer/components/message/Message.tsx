@@ -29,6 +29,7 @@ import { useChatStore2, ChatStoreDispatch } from '../../stores/chat'
 import { DeltaBackend } from '../../delta-remote'
 import { runtime } from '../../runtime'
 import { AvatarFromContact } from '../Avatar'
+import { ConversationType } from './MessageList'
 // const log = getLogger('renderer/message')
 
 const Avatar = (
@@ -108,7 +109,7 @@ const ForwardedTitle = (
   contact: DCContact,
   onContactClick: (contact: DCContact) => void,
   direction: string,
-  conversationType: string
+  conversationType: ConversationType
 ) => {
   const tx = useTranslationFunction()
 
@@ -117,7 +118,7 @@ const ForwardedTitle = (
       className='forwarded-indicator'
       onClick={() => onContactClick(contact)}
     >
-      {conversationType === 'group' && direction !== 'outgoing'
+      {conversationType.hasMultipleParticipants && direction !== 'outgoing'
         ? tx('forwared_by', contact.displayName)
         : tx('forwarded_message')}
     </div>
@@ -132,7 +133,6 @@ function buildContextMenu(
     message,
     text,
     conversationType,
-    isDeviceChat,
   }: // onRetrySend,
   {
     attachment: MessageTypeAttachment
@@ -140,8 +140,7 @@ function buildContextMenu(
     status: msgStatus
     message: MessageType | { msg: null }
     text?: string
-    conversationType: 'group' | 'direct'
-    isDeviceChat: boolean
+    conversationType: ConversationType
     // onRetrySend: Function
   },
   link: string,
@@ -159,12 +158,12 @@ function buildContextMenu(
 
   return [
     // Reply
-    !isDeviceChat && {
+    !conversationType.isDeviceChat && {
       label: tx('reply_noun'),
       action: setQuoteInDraft.bind(null, message.msg.id),
     },
     // Reply privately -> only show in groups, don't show on info messages or outgoing messages
-    conversationType === 'group' &&
+    conversationType.chatType === C.DC_CHAT_TYPE_GROUP &&
       message.msg.fromId > C.DC_CONTACT_ID_LAST_SPECIAL && {
         label: tx('reply_privately'),
         action: privateReply.bind(null, message.msg),
@@ -224,11 +223,10 @@ function buildContextMenu(
 
 const Message = (props: {
   message: MessageType
-  conversationType: 'group' | 'direct'
-  isDeviceChat: boolean
+  conversationType: ConversationType
   /* onRetrySend */
 }) => {
-  const { message, conversationType, isDeviceChat } = props
+  const { message, conversationType } = props
   const {
     id,
     direction,
@@ -259,7 +257,6 @@ const Message = (props: {
         message,
         text,
         conversationType,
-        isDeviceChat,
       },
       link,
       chatStoreDispatch
@@ -365,7 +362,7 @@ const Message = (props: {
       )}
       onDoubleClick={onMessageDoubleClick}
     >
-      {conversationType === 'group' &&
+      {conversationType.hasMultipleParticipants &&
         direction === 'incoming' &&
         Avatar(message.contact, onContactClick)}
       <div
@@ -384,7 +381,8 @@ const Message = (props: {
           <div
             className={classNames('author-wrapper', {
               'can-hide':
-                direction === 'outgoing' || conversationType === 'direct',
+                direction === 'outgoing' ||
+                !conversationType.hasMultipleParticipants,
             })}
           >
             {Author(message.contact, onContactClick)}
