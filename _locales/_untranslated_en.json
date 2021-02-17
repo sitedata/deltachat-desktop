@@ -64,5 +64,8 @@
   },
   "forwared_by": {
     "message": "Forwarded by %1$s"
+  },
+  "mailing_list_diabled_composer": {
+    "message": "Sending Messages in Mailinglists is not supported yet"
   }
 }
