@@ -29,6 +29,7 @@ import { useChatStore2, ChatStoreDispatch } from '../../stores/chat'
 import { DeltaBackend } from '../../delta-remote'
 import { runtime } from '../../runtime'
 import { AvatarFromContact } from '../Avatar'
+import moment from 'moment'
 // const log = getLogger('renderer/message')
 
 const Avatar = (
@@ -468,6 +469,23 @@ export const Quote = ({
         {message && message.contact.displayName}
       </div>
       <p>{quotedText}</p>
+    </div>
+  )
+}
+
+export function DayMarkerInfoMessage(props: { timestamp: number }) {
+  const { timestamp } = props
+  const tx = useTranslationFunction()
+  return (
+    <div className='info-message'>
+      <p style={{ textTransform: 'capitalize' }}>
+        {moment.unix(timestamp).calendar(null, {
+          sameDay: `[${tx('today')}]`,
+          lastDay: `[${tx('yesterday')}]`,
+          lastWeek: 'LL',
+          sameElse: 'LL',
+        })}
+      </p>
     </div>
   )
 }

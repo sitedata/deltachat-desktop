@@ -103,6 +103,7 @@ export interface ChatListItemType {
 }
 
 import type { Chat, Message } from 'deltachat-node'
+import { MessageType2 } from './shared'
 
 export type JsonChat = ReturnType<typeof Chat.prototype.toJson>
 
@@ -181,6 +182,17 @@ export interface MessageType {
   isInfo: boolean
   setupCodeBegin?: string
 }
+
+export type MessageDayMarker = {
+  timestamp: number
+}
+
+export type MessageMarkerOne = null
+
+export type Message2 = {
+  type: MessageType2
+  message: MessageMarkerOne | MessageDayMarker | MessageType | null
+} | null
 
 export type DCContact = Omit<JsonContact, 'color'> & { color: string }
 
